@@ -1,16 +1,17 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
-</template>
+  <div>
+    <drop-components />
+  </div>
+</template>s
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import DropComponents from '@/components/DropComponents';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    DropComponents
+  },
 }
 </script>
 
@@ -22,5 +23,12 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.droppable {
+  padding: 15px;
+  height: 250px;
+  border-radius: 5px;
+  background: #2c3e50;
+  margin-bottom: 10px;
 }
 </style>
