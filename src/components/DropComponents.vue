@@ -43,11 +43,14 @@ export default {
     },
     submitFiles() {
       this.files.forEach(file => {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          console.log(reader.result);
-        };
+        if(/\.(jpe?g|png|gif)$/i.test( file.name )){
+          let reader = new FileReader();
+          reader.readAsDataURL(file);
+
+          reader.onload = () => {
+            console.log(reader.result);
+          };
+        }
       })
     }
   },

@@ -28,16 +28,17 @@ export default {
       this.files.forEach((file, key) => {
         if ( /\.(jpe?g|png|gif)$/i.test( file.name ) ) {
           let reader = new FileReader();
-          reader.onload = () => {
-            this.$refs['preview'+parseInt(key)].src = reader.result;
-          };
           reader.readAsDataURL(file);
+
+          reader.onload = () => {
+            this.$refs['preview' + parseInt(key)].src = reader.result;
+          };
         }
       })
     },
   }
 }
-</script>
+<img src="../assets/logo.png" height="200" width="200"/></script>
 
 <style scoped>
 div.file-listing{
