@@ -3,18 +3,11 @@
     <form ref="fileform">
       <span class="drop-files">Drop the files here!</span>
     </form>
-    <div
-      v-for="(file, key) in files"
-      :key="key"
-      class="file-listing"
-    >
-      <img class="preview" :ref="'preview'+parseInt(key)" />
-      {{ file.name }}
-
-      <div class="remove-container">
-        <a class="remove" v-on:click="removeFile( key )">Remove</a>
-      </div>
-    </div>
+    <preview-images
+      ref="previewImg"
+      :files="files"
+      @removeFile="removeFile($event)"
+    />
     <button
       class="submit_button"
       v-show="files.length > 0"
@@ -26,13 +19,15 @@
 </template>
 
 <script>
+import PreviewImages from '@/components/PreviewImages';
+
 export default {
   name: "DropComponents",
+  components: { PreviewImages },
   data(){
     return {
       dragAndDropCapable: false,
-      files: [],
-      files_base64: []
+      files: []
     }
   },
   methods: {
@@ -43,25 +38,16 @@ export default {
           && 'FormData' in window
           && 'FileReader' in window;
     },
-    getImagePreviews() {
-      for( let i = 0; i < this.files.length; i++ ){
-        if ( /\.(jpe?g|png|gif)$/i.test( this.files[i].name ) ) {
-          console.log(this.files[i])
-          let reader = new FileReader();
-          reader.addEventListener("load", () => {
-            this.$refs['preview'+parseInt(i)].src = reader.result;
-            this.files_base64.push(reader.result);
-          }, false);
-          reader.readAsDataURL( this.files[i] );
-        }
-      }
-    },
     removeFile(key) {
       this.files.splice( key, 1 );
     },
     submitFiles() {
-      this.files_base64.forEach(file => {
-        console.log(file)
+      this.files.forEach(file => {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          console.log(reader.result);
+        };
       })
     }
   },
@@ -77,7 +63,7 @@ export default {
       this.$refs.fileform.addEventListener('drop', e => {
         for( let i = 0; i < e.dataTransfer.files.length; i++ ){
           ( !this.files.find(file => file.name === e.dataTransfer.files[i].name ) ) ? this.files.push( e.dataTransfer.files[i] ) : null
-          this.getImagePreviews();
+          this.$refs.previewImg.getImagePreviews();
         }
       });
     }
@@ -95,24 +81,6 @@ form {
   text-align: center;
   line-height: 150px;
   border-radius: 4px;
-}
-div.file-listing{
-  width: 400px;
-  margin: auto;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-div.file-listing img{
-  height: 100px;
-}
-div.remove-container{
-  text-align: center;
-  margin: 10px;
-  border: 1px solid red;
-}
-div.remove-container a{
-  color: red;
-  cursor: pointer;
 }
 .submit_button {
   display: block;
